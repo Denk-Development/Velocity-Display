@@ -15,7 +15,7 @@
 #define photoSensor2 13
 
 // distance between photo sensor 1 and 2
-#define s 0.15
+float s = 0.15f;
 
 unsigned long millisStart, millisStop;
 
@@ -37,10 +37,10 @@ void setup() {
 }
 
 void loop() {
-  while (digitalRead(photoSensor1) == LOW) {} // wait for rising
+  while (digitalRead(photoSensor1) == LOW) {} // wait for rising edge
   millisStart = millis();
-  while (digitalRead(photoSensor2) == LOW) {} // wait for rising of photo sensor 2
-  milliStop = millis();
+  while (digitalRead(photoSensor2) == LOW) {} // wait for rising edge of photo sensor 2
+  millisStop = millis();
   
   float t = (millisStop - millisStart) / 1000.0f;
   
@@ -48,6 +48,22 @@ void loop() {
   v *= 3.6 * 16.0;
   
   showVelocity((byte)v);
+  delay(3000);
+  showNoVelocity();
+  delay(1000);
+  showSmiley((byte)v);
+  delay(700);
+  showNoSmiley();
+  delay(500);
+  showSmiley((byte)v);
+  delay(700);
+  showNoSmiley();
+  delay(500);
+  showSmiley((byte)v);
+  delay(700);
+  showNoSmiley();
+  
+  delay(1000);
 }
 
 void showVelocity(byte velocity) {
@@ -85,4 +101,31 @@ void showSegment(byte segment, byte value) {
       digitalWrite(segment2D, D);
       break;
   }
+}
+
+void showSmiley(byte v) {
+  if (v <= 50) {
+    digitalWrite(smileyGood, HIGH);
+  }
+  else {
+    digitalWrite(smileyBad, HIGH);
+  }
+}
+
+void showNoVelocity() {
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(segment1A, HIGH);
+  digitalWrite(segment1B, HIGH);
+  digitalWrite(segment1C, HIGH);
+  digitalWrite(segment1D, HIGH);
+  digitalWrite(segment2A, HIGH);
+  digitalWrite(segment2B, HIGH);
+  digitalWrite(segment2C, HIGH);
+  digitalWrite(segment2D, HIGH);
+}
+
+void showNoSmiley() { 
+  digitalWrite(smileyGood, LOW);
+  digitalWrite(smileyBad, LOW);
 }
